@@ -5,14 +5,11 @@ class CoordinateSystem:
     def __init__(self, ori_axis, vectors):
         """初始化向量"""
         self.axis = np.array(ori_axis) / np.linalg.norm(ori_axis, axis=1, keepdims=True) # 向量除以模长
-        self.vectors = np.array(vectors) / np.linalg.norm(vectors, axis=1, keepdims=True) # np.linalg.norm的参数是(数组，按行/列取，要不要压缩至一维的向量)
+        self.vectors = np.array(vectors) # np.linalg.norm的参数是(数组，按行/列取，要不要压缩至一维的向量)
 
     def transform(self, obj_axis):
         """
         坐标系转换和向量的移动
-        这个函数我一整个周五和周六的凌晨都花在这上面了
-        我也不知道为什么就是错了，明明别人相同的算法没错的啊，ai已经被我问的幻觉都出来了，我没招了
-        学长学姐如果你看到这个请帮我看看这个代码的错误在哪 [感谢]
         """
         ori = self.axis
         obj = np.array(obj_axis)
@@ -21,10 +18,11 @@ class CoordinateSystem:
         obj_norm = np.linalg.norm(obj, axis=1, keepdims=True)
         obj = obj / obj_norm
 
-        ori_inv = (np.linalg.inv(ori))
-        vec_new = obj @ np.dot(ori_inv, vec)
+        ori_inv = np.linalg.inv(ori)
+        vec_standard = np.dot(ori_inv, vec.T) # 保持11x2的形式避免矩阵乘不了
+        vec_new = np.dot(obj, vec_standard)
 
-        self.vectors = vec_new
+        self.vectors = vec_new.T # vec_new是一个2x11的矩阵，转置一下就正常了
         self.axis = obj
         return self.vectors
 
