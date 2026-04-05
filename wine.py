@@ -49,10 +49,11 @@ def standardization(X_train, X_test, *others):
 
 def LinearRegression1(X_raw, Y_raw):
     """解析法"""
-    X_raw['bias'] = 1.0  # 这个是给bias的量
-    X_raw = X_raw.to_numpy()
+    X_raw1 = X_raw.copy()
+    X_raw1['bias'] = 1.0  # 这个是给bias的量
+    X_raw1 = X_raw.to_numpy()
     Y_raw = Y_raw.to_numpy()
-    X_train, Y_train, X_test, Y_test, *_= numpy_spilt(X_raw,Y_raw)
+    X_train, Y_train, X_test, Y_test= numpy_spilt(X_raw1,Y_raw)
     W1 = np.linalg.pinv(X_train.T.dot(X_train)).dot(X_train.T).dot(Y_train)
     W = W1[:-1].reshape(-1, 1) # 将二者分开来
     b = W1[-1]
